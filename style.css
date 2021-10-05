@@ -1,0 +1,30 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+:root {
+    --size-cell: 20px;
+    --size-field: 30;
+}
+
+.field {
+    width: calc(var(--size-field) * var(--size-cell));
+    height: calc(var(--size-field) * var(--size-cell));
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.cell {
+    width: var(--size-cell);
+    height: var(--size-cell);
+    background-color: beige;
+}
+
+.apple {
+    background-color: red;
+}
+
+.snake {
+    background-color: chartreuse;
+}
