@@ -95,7 +95,7 @@ function handleClick(e) {
 
 }
 
-function randomApple(matrix, snake) {
+function randomApple(matrix) {
     return matrix;
 }
 
