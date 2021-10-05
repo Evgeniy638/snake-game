@@ -58,14 +58,14 @@ function fillField(width, height) {
     matrix[snake[1].y][snake[1].x] = typeCell.SNAKE;
 
     matrix = randomApple(matrix, snake);
-    draw(matrix);
+    draw(matrix, matrixCell);
 }
 
 function gameLoop() {
 
 }
 
-function draw(matrix) {
+function draw(matrix, matrixCell) {
     matrix.forEach((row, y) => {
         row.forEach((cell, x) => {
             matrixCell[y][x].classList.remove('apple');
@@ -83,6 +83,8 @@ function draw(matrix) {
             }
         });
     });
+
+    return matrixCell;
 }
 
 function move(matrix, snake, direction) {
@@ -94,5 +96,9 @@ function handleClick(e) {
 }
 
 function randomApple(matrix, snake) {
+    return matrix;
+}
+
+function eat(matrix, x, y) {
     return matrix;
 }
