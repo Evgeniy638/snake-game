@@ -13,6 +13,12 @@ const typesDirection = {
     UP: "UP",
 };
 
+const state = {
+    score,
+    isLive: true,
+    direction: typesDirection.LEFT
+}
+
 const size = {
     width: 30,
     heith: 30
@@ -21,7 +27,6 @@ const size = {
 let snake = [];
 let matrixCell = [];
 let matrix = [];
-let direction = typesDirection.LEFT;
 
 window.onload = () => {
     fillField(size.width, size.heith);
@@ -88,7 +93,7 @@ function draw(matrix, matrixCell) {
 }
 
 function move(matrix, snake, direction) {
-    return matrix;
+    return { matrix, snake };
 }
 
 function handleClick(e) {
