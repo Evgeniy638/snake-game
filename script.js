@@ -147,7 +147,7 @@ function move(matrix, snake, direction) {
     }
 
     let isDie = lastTypeCell === typeCell.SNAKE && 
-        snake[snake.length - 1].x === nextCoords.x && snake[snake.length - 1].y === nextCoords.y;
+        !(snake[snake.length - 1].x === nextCoords.x && snake[snake.length - 1].y === nextCoords.y);
 
     matrix[snake[snake.length - 1].y][snake[snake.length - 1].x] = typeCell.EMPTY;
     snake.pop();
@@ -197,34 +197,36 @@ function getNextCoords(snake, direction, width, height) {
 }
 
 function handleKeyUp(e) {
+    let newDirection;
+
     switch (e.key) {
         case "ArrowLeft":
-            state.direction = state.direction !== typesDirection.RIGHT 
-                ?typesDirection.LEFT 
-                :state.direction;
+            newDirection = typesDirection.LEFT;
             break;
 
         case "ArrowRight":
-            state.direction = state.direction !== typesDirection.LEFT 
-                ?typesDirection.RIGHT 
-                :state.direction;
+            newDirection = typesDirection.RIGHT;
             break;
 
         case "ArrowDown":
-            state.direction = state.direction !== typesDirection.UP 
-                ?typesDirection.DOWN 
-                :state.direction;
+            newDirection = typesDirection.DOWN;
             break;
 
         case "ArrowUp":
-            state.direction = state.direction !== typesDirection.DOWN 
-                ?typesDirection.UP 
-                :state.direction;
+            newDirection = typesDirection.UP;
             break;
     
         default:
             break;
     }
+
+    const newCoords = getNextCoords(snake, newDirection, size.width, size.heith);
+
+    if (newCoords.x === snake[1].x && newCoords.y === snake[1].y) {
+        return;
+    }
+
+    state.direction = newDirection;
 }
 
 function randomApple(matrix) {
