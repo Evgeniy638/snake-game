@@ -1,3 +1,7 @@
+function copyObj(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
+
 describe("Тесты на змейку", function () {
     it("Тесты на randomApple", function () {
         const matrix = [
@@ -59,19 +63,19 @@ describe("Тесты на змейку", function () {
 
         const snake2 = [
             {
-                x: 3,
+                x: 4,
                 y: 4,
             },
             {
-                x: 4,
+                x: 3,
                 y: 4,
             },
         ];
 
-        const resultUp = move(matrix1, snake1, typesDirection.UP);
-        const resultDown = move(matrix2, snake2, typesDirection.DOWN);
-        const resultLeft = move(matrix1, snake1, typesDirection.LEFT);
-        const resultRight = move(matrix2, snake2, typesDirection.RIGHT);
+        const resultUp = move(copyObj(matrix1), copyObj(snake1), typesDirection.UP);
+        const resultDown = move(copyObj(matrix2), copyObj(snake2), typesDirection.DOWN);
+        const resultLeft = move(copyObj(matrix1), copyObj(snake1), typesDirection.LEFT);
+        const resultRight = move(copyObj(matrix2), copyObj(snake2), typesDirection.RIGHT);
 
         assert.equal(resultUp.snake.length, snake1.length, 'Змея должна сохранить свою длину');
         assert.equal(resultDown.snake.length, snake2.length, 'Змея должна сохранить свою длину');

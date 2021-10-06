@@ -194,7 +194,6 @@ function getNextCoords(snake, direction, width, height) {
 }
 
 function handleKeyUp(e) {
-    console.log(e.key);
     switch (e.key) {
         case "ArrowLeft":
             state.direction = state.direction !== typesDirection.RIGHT 
