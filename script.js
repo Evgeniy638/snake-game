@@ -31,7 +31,7 @@ let matrix = [];
 window.onload = () => {
     setScore(0);
     fillField(size.width, size.heith);
-    document.addEventListener("click", handleClick);
+    document.addEventListener("keyup", handleKeyUp);
     startGameLoop();
 };
 
@@ -180,11 +180,11 @@ function getNextCoords(snake, direction, width, height) {
     }
 
     if (y < 0) {
-        x = height - 1;
+        y = height - 1;
     }
 
     if (y >= height) {
-        x = 0;
+        y = 0;
     }
 
     return {
@@ -193,8 +193,36 @@ function getNextCoords(snake, direction, width, height) {
     }
 }
 
-function handleClick(e) {
+function handleKeyUp(e) {
+    console.log(e.key);
+    switch (e.key) {
+        case "ArrowLeft":
+            state.direction = state.direction !== typesDirection.RIGHT 
+                ?typesDirection.LEFT 
+                :state.direction;
+            break;
 
+        case "ArrowRight":
+            state.direction = state.direction !== typesDirection.LEFT 
+                ?typesDirection.RIGHT 
+                :state.direction;
+            break;
+
+        case "ArrowDown":
+            state.direction = state.direction !== typesDirection.UP 
+                ?typesDirection.DOWN 
+                :state.direction;
+            break;
+
+        case "ArrowUp":
+            state.direction = state.direction !== typesDirection.DOWN 
+                ?typesDirection.UP 
+                :state.direction;
+            break;
+    
+        default:
+            break;
+    }
 }
 
 function randomApple(matrix) {
