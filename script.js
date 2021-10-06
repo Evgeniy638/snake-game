@@ -1,4 +1,5 @@
 const field = document.querySelector('.field');
+const scoreElement = document.querySelector('.score');
 
 const typeCell = {
     APPLE: "APPLE",
@@ -14,9 +15,8 @@ const typesDirection = {
 };
 
 const state = {
-    score,
-    isLive: true,
-    direction: typesDirection.LEFT
+    direction: typesDirection.LEFT,
+    speed: 10, // клетка/секунда
 }
 
 const size = {
@@ -29,9 +29,10 @@ let matrixCell = [];
 let matrix = [];
 
 window.onload = () => {
+    setScore(0);
     fillField(size.width, size.heith);
     document.addEventListener("click", handleClick);
-    gameLoop();
+    startGameLoop();
 };
 
 function fillField(width, height) {
@@ -66,8 +67,38 @@ function fillField(width, height) {
     draw(matrix, matrixCell);
 }
 
-function gameLoop() {
+function startGameLoop() {
+    let timeOldMove;
 
+    function gameLoop(time) {
+        if (timeOldMove === null) {
+            timeOldMove = time;
+            requestAnimationFrame(gameLoop);
+            return;
+        }
+
+        const timeNewMove = (time - timeOldMove);
+        if (state.speed * timeNewMove / 1000 < 1 ) {
+            requestAnimationFrame(gameLoop);
+            return;
+        }
+
+        timeOldMove = time;
+
+        const movedResult = move(matrix, snake, state.direction);
+        matrix = movedResult.matrix;
+        snake = movedResult.snake;
+
+        if (movedResult.isDie) {
+            //to do
+            return;
+        }
+
+        draw(matrix, matrixCell);
+        requestAnimationFrame(gameLoop);
+    }
+
+    requestAnimationFrame(gameLoop);
 }
 
 function draw(matrix, matrixCell) {
@@ -93,7 +124,73 @@ function draw(matrix, matrixCell) {
 }
 
 function move(matrix, snake, direction) {
-    return { matrix, snake };
+    const nextCoords = getNextCoords(snake, direction, matrix[0].length, matrix.length);
+
+    const lastTypeCell = matrix[nextCoords.y][nextCoords.x];
+    snake.unshift({
+        x: nextCoords.x,
+        y: nextCoords.y,
+    });
+    matrix[nextCoords.y][nextCoords.x] = typeCell.SNAKE;
+
+    if (lastTypeCell === typeCell.APPLE) {
+        eat(matrix, snake, nextCoords.x, nextCoords.y);
+        
+        return {
+            matrix, 
+            snake, 
+            isDie: false,
+        };
+    }
+
+    let isDie = lastTypeCell === typeCell.SNAKE && 
+        snake[snake.length - 1].x === nextCoords.x && snake[snake.length - 1].y === nextCoords.y;
+
+    matrix[snake[snake.length - 1].y][snake[snake.length - 1].x] = typeCell.EMPTY;
+    snake.pop();
+
+    return { matrix, snake, isDie };
+}
+
+function getNextCoords(snake, direction, width, height) {
+    let x = snake[0].x;
+    let y = snake[0].y;
+
+    switch (direction) {
+        case typesDirection.UP:
+            y--;
+            break;
+        case typesDirection.DOWN:
+            y++;
+            break;
+        case typesDirection.LEFT:
+            x--;
+            break;    
+        default:
+            x++;
+            break;
+    }
+
+    if (x < 0) {
+        x = width - 1;
+    }
+
+    if (x >= width) {
+        x = 0;
+    }
+
+    if (y < 0) {
+        x = height - 1;
+    }
+
+    if (y >= height) {
+        x = 0;
+    }
+
+    return {
+        x,
+        y
+    }
 }
 
 function handleClick(e) {
@@ -104,6 +201,11 @@ function randomApple(matrix) {
     return matrix;
 }
 
-function eat(matrix, x, y) {
+function eat(matrix, snake, x, y) {
+    setScore()
     return matrix;
+}
+
+function setScore(score) {
+    scoreElement.textContent = score;
 }
