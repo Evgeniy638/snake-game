@@ -16,6 +16,7 @@ const typesDirection = {
 
 const state = {
     direction: typesDirection.LEFT,
+    defaultSnakeLength: 0,
     speed: 10, // клетка/секунда
 }
 
@@ -59,6 +60,8 @@ function fillField(width, height) {
         x: snake[0].x + 1,
         y: snake[0].y,
     };
+
+    state.defaultSnakeLength = snake.length;
 
     matrix[snake[0].y][snake[0].x] = typeCell.SNAKE;
     matrix[snake[1].y][snake[1].x] = typeCell.SNAKE;
@@ -134,7 +137,7 @@ function move(matrix, snake, direction) {
     matrix[nextCoords.y][nextCoords.x] = typeCell.SNAKE;
 
     if (lastTypeCell === typeCell.APPLE) {
-        eat(matrix, snake, nextCoords.x, nextCoords.y);
+        eat(matrix, snake);
         
         return {
             matrix, 
@@ -225,12 +228,27 @@ function handleKeyUp(e) {
 }
 
 function randomApple(matrix) {
+    const freeCoords = [];
+
+    matrix.forEach((row, y) => {
+        row.forEach((cell, x) => {
+            if (cell !== typeCell.SNAKE) {
+                freeCoords.push({x, y});
+            }
+        });
+    });
+
+    const appleCoords = freeCoords[Math.ceil(Math.random() * freeCoords.length)];
+
+    matrix[appleCoords.y][appleCoords.x] = typeCell.APPLE;
+
     return matrix;
 }
 
-function eat(matrix, snake, x, y) {
-    setScore()
-    return matrix;
+function eat(matrix, snake) {
+    setScore(snake.length - state.defaultSnakeLength);
+    const resultMatrix = randomApple(matrix);
+    return resultMatrix;
 }
 
 function setScore(score) {
